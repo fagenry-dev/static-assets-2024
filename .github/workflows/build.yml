@@ -1,0 +1,27 @@
+name: Build Assets
+on:
+  schedule:
+    - cron: '0 */4 * * *'  # каждые 4 часа
+  workflow_dispatch:  # ручной запуск
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          
+      - name: Build bundle
+        run: python3 scripts/build.py
+        
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add assets/bundle.min.js
+          git diff --staged --quiet || git commit -m "build: update bundle $(date +%Y%m%d-%H%M)"
+          git push
