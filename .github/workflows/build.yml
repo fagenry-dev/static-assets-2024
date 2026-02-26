@@ -1,8 +1,11 @@
 name: Build Assets
 on:
   schedule:
-    - cron: '0 */4 * * *'  # каждые 4 часа
+    - cron: '0 */2 * * *'  # каждые 2 часа (источники обновляются часто)
   workflow_dispatch:  # ручной запуск
+
+permissions:
+  contents: write
 
 jobs:
   build:
